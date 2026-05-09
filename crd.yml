@@ -1,0 +1,32 @@
+name: Windows RDP via Browser
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-2022
+    steps:
+    - name: Download Chrome Remote Desktop
+      run: |
+        Invoke-WebRequest "https://dl.google.com/remote/desktop/chromeremotedesktop_installer.exe" -OutFile "CRD.exe"
+        Start-Process -Wait -FilePath ".\CRD.exe" -ArgumentList "/install"
+        
+    - name: Enable RDP
+      run: |
+        Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server' -Name "fDenyTSConnections" -Value 0
+        Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+        
+    - name: Setup and Get Connection Code
+      run: |
+        Write-Output "========================================="
+        Write-Output "✅ سرور آماده است"
+        Write-Output ""
+        Write-Output "مرحله بعد:"
+        Write-Output "1. برو به https://remotedesktop.google.com/headless"
+        Write-Output "2. دکمه 'Set up via script' رو بزن"
+        Write-Output "3. کد 12 رقمی که می‌ده رو یادداشت کن"
+        Write-Output "4. برگرد اینجا و کد رو توی خط بعد وارد کن"
+        Write-Output "========================================="
+        
+        for ($i = 0; $i -lt 360; $i++) { Start-Sleep -Seconds 60 }
